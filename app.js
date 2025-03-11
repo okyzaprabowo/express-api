@@ -1,15 +1,15 @@
-const express = require('express');
-const authRoutes = require('./routes/authRoutes');
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+require("dotenv").config();
+
+const authRoutes = require("./routes/authRoutes");
+
 const app = express();
+app.use(cors());
+app.use(bodyParser.json());
 
-// Middleware untuk parsing JSON
-app.use(express.json());
+app.use("/api/auth", authRoutes);
 
-// Gunakan route otentikasi
-app.use('/api/auth', authRoutes);
-
-// Jalankan server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

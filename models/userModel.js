@@ -1,17 +1,23 @@
-const bcrypt = require('bcryptjs');
+const db = require("../config/db");
 
-// Simulasi database pengguna
-const users = [
-    {
-        id: 1,
-        username: 'user1',
-        password: bcrypt.hashSync('password1', 8) // Hash password
+const User = {
+    create: async (username, email, password) => {
+        const sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+        const [result] = await db.execute(sql, [username, email, password]);
+        return result;
     },
-    {
-        id: 2,
-        username: 'user2',
-        password: bcrypt.hashSync('password2', 8) // Hash password
-    }
-];
 
-module.exports = users;
+    findByEmail: async (email) => {
+        const sql = "SELECT * FROM users WHERE email = ?";
+        const [rows] = await db.execute(sql, [email]);
+        return rows;
+    },
+
+    findById: async (id) => {
+        const sql = "SELECT id, username, email FROM users WHERE id = ?";
+        const [rows] = await db.execute(sql, [id]);
+        return rows;
+    }
+};
+
+module.exports = User;

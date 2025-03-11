@@ -1,20 +1,17 @@
-const jwt = require('jsonwebtoken');
-const config = require('../config/config');
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
-// Middleware untuk memverifikasi token JWT
-exports.authenticateToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+const authenticateToken = (req, res, next) => {
+  const token = req.header("Authorization");
+  if (!token) return res.status(401).json({ message: "Access Denied" });
 
-    if (!token) {
-        return res.status(401).json({ message: 'Access denied. No token provided.' });
-    }
-
-    jwt.verify(token, config.secretKey, (err, user) => {
-        if (err) {
-            return res.status(403).json({ message: 'Invalid token' });
-        }
-        req.user = user;
-        next();
-    });
+  try {
+    const verified = jwt.verify(token.split(" ")[1], process.env.JWT_SECRET);
+    req.user = verified;
+    next();
+  } catch (error) {
+    res.status(400).json({ message: "Invalid Token" });
+  }
 };
+
+module.exports = authenticateToken;

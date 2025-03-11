@@ -1,3 +1,11 @@
+require("dotenv").config();
+
 module.exports = {
-    secretKey: '9c7a0f904606868566d01bc24a93850e' // Ganti dengan secret key yang kuat
+    secretKey: process.env.JWT_SECRET || 'default-secret-key', // Baca dari .env atau gunakan default
+    dbConfig: {
+        host: process.env.DB_HOST || 'localhost',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_PASS || 'root',
+        database: process.env.DB_NAME || 'node_auth_db',
+    }
 };
